@@ -28,7 +28,7 @@ function playGame()
 		playerOnePosition=$(( $playerOnePosition - $diceNumber ));;
 	esac
 	
-	checkReachedWin
+	checkReachedWin $diceNumber
 
 }
 
@@ -41,6 +41,9 @@ function checkReachedWin()
 	elif [ $playerOnePosition -ge $FINAL_POSITION ]
 	then
 		playerOnePosition=$FINAL_POSITION
+	elif [ $playerOnePosition -gt $FINAL_POSITION  ]
+	then
+		playerOnePosition=$(( $playerOnePosition - $1))
 	fi
 
 }
