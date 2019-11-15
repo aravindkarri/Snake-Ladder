@@ -1,62 +1,92 @@
-#!/bin/bash 
+#!/bin/bash
 echo welcome
 
 INITIAL_POSITION=0
-numberOfPlayer=1
 FINAL_POSITION=100
 NO_PLAY=0
 LADDER=1
 SNAKE=2
-counter=0
-declear -a diceCounter
-
-
+numberOfPlayer=1
+diceCount=0
+playerPosition=0
+chance=0
+declare -a playerOneCounter
+declare -a playerTwoCounter
 playerOnePosition=$INITIAL_POSITION
-
+playerTwoPosition=$INITIAL_POSITION
 
 function playGame()
 {
-	diceNumber=$((RANDOM%6+1))
-	counter=$(($counter+1))
-	option=$((RANDOM%3))
 
+	diceNumber=$((RANDOM%6+1))
+	diceCount=$(($diceCount+1))
+	option=$((RANDOM%3))
 	case $option in
 	$NO_PLAY)
-		playerOnePosition=$playerOnePosition;;
+		playerPosition=$playerPosition
+		chance=$(($chance+1));;
 	$LADDER)
-		playerOnePosition=$(( $playerOnePosition + $diceNumber ));;
+		playerPosition=$(( $playerPosition + $diceNumber ));;
 	$SNAKE)
-		playerOnePosition=$(( $playerOnePosition - $diceNumber ));;
+		playerPosition=$(( $playerPosition - $diceNumber ))
+		chance=$(($chance+1));;
 	esac
-	
-	checkReachedWin $diceNumber
-	diceCounter[$counter]=$playerOnePosition
+	checkReachedWin $diceNumber $playerPosition
 
 }
-
 
 function checkReachedWin()
 {
-	if [ $playerOnePosition -le $INITIAL_POSITION ]
+	if [ $2 -le $INITIAL_POSITION ]
 	then
-		playerOnePosition=$INITIAL_POSITION
-	elif [ $playerOnePosition -ge $FINAL_POSITION ]
+		playerPosition=$INITIAL_POSITION
+	elif [ $2 -eq $FINAL_POSITION ]
 	then
-		playerOnePosition=$FINAL_POSITION
-	elif [ $playerOnePosition -gt $FINAL_POSITION  ]
+		playerPosition=$FINAL_POSITION
+	elif [ $2 -gt $FINAL_POSITION ]
 	then
-		playerOnePosition=$(( $playerOnePosition - $1))
+		playerPosition=$(( $2 - $1 ))
 	fi
-
 }
 
-while [ $playerOnePosition -lt $FINAL_POSITION ]
+#============Main=============
+
+
+while [ $playerOnePosition -lt $FINAL_POSITION ] && [ $playerTwoPosition -lt $FINAL_POSITION ]
 do
-	playGame
+	if [ $(($chance%2)) -eq 0 ]
+	then
+		playerPosition=$playerOnePosition
+		playGame $playerPosition $playerOneCounter
+		playerOneCounter[$diceCount]=$playerPosition
+		playerOnePosition=$playerPosition
+		if [ $playerOnePosition -eq $FINAL_POSITION ]
+		then
+			echo "Player one won"
+			break
+		fi
+	else 
+		playerPosition=$playerTwoPosition
+		playGame $playerPosition $playerTwoCounter
+		playerTwoCounter[$diceCount]=$playerPosition
+		playerTwoPosition=$playerPosition
+		if [ $playerTwoPosition -eq $FINAL_POSITION ]
+		then
+			echo "player two won"
+			break
+		fi
+	fi
 done
 
-for key in ${!diceCounter[@]}
-do 
-	echo " Dice_Count " $key ":" " position  " ${diceCounter[$key]}
+
+for key in ${!playerOneCounter[@]}
+do
+	echo "Dice_Count " $key ":" "  One Position  "${playerOneCounter[$key]}
 done
 
+
+
+for key in ${!playerTwoCounter[@]}
+do
+	echo "Dice_Count " $key ":" " Two Position  "${playerTwoCounter[$key]}
+done
