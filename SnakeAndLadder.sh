@@ -3,14 +3,14 @@ echo welcome
 
 INITIAL_POSITION=0
 numberOfPlayer=1
-FINAL_POSITION=10
+FINAL_POSITION=100
 NO_PLAY=0
 LADDER=1
 SNAKE=2
 counter=0
 
 
-playerPosition=$INITIAL_POSITION
+playerOnePosition=$INITIAL_POSITION
 
 
 function playGame()
@@ -21,17 +21,33 @@ function playGame()
 
 	case $option in
 	$NO_PLAY)
-		playerPosition=$playerPosition;;
+		playerOnePosition=$playerOnePosition;;
 	$LADDER)
-		playerPosition=$(( $playerPosition + $diceNumber ));;
+		playerOnePosition=$(( $playerOnePosition + $diceNumber ));;
 	$SNAKE)
-		playerPosition=$(( $playerPosition - $diceNumber ));;
+		playerOnePosition=$(( $playerOnePosition - $diceNumber ));;
 	esac
-
-
+	
+	checkReachedWin
 
 }
 
-playGame
+
+function checkReachedWin()
+{
+	if [ $playerOnePosition -le $INITIAL_POSITION ]
+	then
+		playerOnePosition=$INITIAL_POSITION
+	elif [ $playerOnePosition -ge $FINAL_POSITION ]
+	then
+		playerOnePosition=$FINAL_POSITION
+	fi
+
+}
+
+while [ $playerOnePosition -lt $FINAL_POSITION ]
+do
+	playGame
+done
 
 
