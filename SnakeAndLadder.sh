@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 echo welcome
 
 INITIAL_POSITION=0
@@ -8,6 +8,7 @@ NO_PLAY=0
 LADDER=1
 SNAKE=2
 counter=0
+declear -a diceCounter
 
 
 playerOnePosition=$INITIAL_POSITION
@@ -29,6 +30,7 @@ function playGame()
 	esac
 	
 	checkReachedWin $diceNumber
+	diceCounter[$counter]=$playerOnePosition
 
 }
 
@@ -53,4 +55,8 @@ do
 	playGame
 done
 
+for key in ${!diceCounter[@]}
+do 
+	echo " Dice_Count " $key ":" " position  " ${diceCounter[$key]}
+done
 
