@@ -1,13 +1,13 @@
-#!/bin/bash
-echo welcome
+#!/bin/bash -x
+
+echo "Welcome"
 
 INITIAL_POSITION=0
 FINAL_POSITION=100
 NO_PLAY=0
 LADDER=1
 SNAKE=2
-numberOfPlayer=1
-diceCount=0
+numberOfDiceRolled=0
 playerPosition=0
 chance=0
 declare -a playerOneCounter
@@ -19,7 +19,7 @@ function playGame()
 {
 
 	diceNumber=$((RANDOM%6+1))
-	diceCount=$(($diceCount+1))
+	numberOfDiceRolled=$(($numberOfDiceRolled+1))
 	option=$((RANDOM%3))
 	case $option in
 	$NO_PLAY)
@@ -49,8 +49,6 @@ function checkReachedWin()
 	fi
 }
 
-#============Main=============
-
 
 while [ $playerOnePosition -lt $FINAL_POSITION ] && [ $playerTwoPosition -lt $FINAL_POSITION ]
 do
@@ -58,7 +56,7 @@ do
 	then
 		playerPosition=$playerOnePosition
 		playGame $playerPosition $playerOneCounter
-		playerOneCounter[$diceCount]=$playerPosition
+		playerOneCounter[$numberOfDiceRolled]=$playerPosition
 		playerOnePosition=$playerPosition
 		if [ $playerOnePosition -eq $FINAL_POSITION ]
 		then
@@ -68,7 +66,7 @@ do
 	else 
 		playerPosition=$playerTwoPosition
 		playGame $playerPosition $playerTwoCounter
-		playerTwoCounter[$diceCount]=$playerPosition
+		playerTwoCounter[$numberOfDiceRolled]=$playerPosition
 		playerTwoPosition=$playerPosition
 		if [ $playerTwoPosition -eq $FINAL_POSITION ]
 		then
@@ -76,17 +74,4 @@ do
 			break
 		fi
 	fi
-done
-
-
-for key in ${!playerOneCounter[@]}
-do
-	echo "Dice_Count " $key ":" "  One Position  "${playerOneCounter[$key]}
-done
-
-
-
-for key in ${!playerTwoCounter[@]}
-do
-	echo "Dice_Count " $key ":" " Two Position  "${playerTwoCounter[$key]}
 done
