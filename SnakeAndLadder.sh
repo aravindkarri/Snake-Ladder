@@ -2,16 +2,23 @@
 
 echo "Welcome"
 
+#Constant
 INITIAL_POSITION=0
 FINAL_POSITION=100
 NO_PLAY=0
 LADDER=1
 SNAKE=2
+
+#Variable
 numberOfDiceRolled=0
 playerPosition=0
 chance=0
+
+#Dictionary
 declare -a playerOneCounter
 declare -a playerTwoCounter
+
+#Position
 playerOnePosition=$INITIAL_POSITION
 playerTwoPosition=$INITIAL_POSITION
 
@@ -32,7 +39,6 @@ function playGame()
 		chance=$(($chance+1));;
 	esac
 	checkReachedWin $diceNumber $playerPosition
-
 }
 
 function checkReachedWin()
@@ -50,6 +56,7 @@ function checkReachedWin()
 }
 
 
+function switchPlayer(){
 while [ $playerOnePosition -lt $FINAL_POSITION ] && [ $playerTwoPosition -lt $FINAL_POSITION ]
 do
 	if [ $(($chance%2)) -eq 0 ]
@@ -75,3 +82,7 @@ do
 		fi
 	fi
 done
+}
+
+#Main
+switchPlayer
